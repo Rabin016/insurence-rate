@@ -1,60 +1,255 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa" target="_blank" rel="noopener">pwa</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div>
+        <div class="mx-auto">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="w-full sm:w-1/2 lg:w-2/3 pb-6 px-3">
+                    <div
+                        class="bg-white shadow-xl rounded-lg overflow-hidden p-5"
+                    >
+                        <form @submit.prevent="calculate">
+                            <div>
+                                <label for="limit">Limit amount: </label>
+                                <input
+                                    type="number"
+                                    name="limit"
+                                    v-model="limit"
+                                    class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100 w-full"
+                                />
+                            </div>
+                            <div class="py-3">
+                                <label for="tenPercent">Add +10% :</label>
+                                <input
+                                    class="text-red-500"
+                                    type="checkbox"
+                                    v-model="tenpercent"
+                                />
+                            </div>
+                            <div class="border-2 rounded-lg px-1 py-3">
+                                <div
+                                    class="flex align-middle items-center py-2"
+                                >
+                                    <p class="pr-3">
+                                        Add Occupation of premises:
+                                    </p>
+                                    <button
+                                        class="bg-green-300 p-1 rounded-lg text-gray-800"
+                                        @click="addPremises"
+                                    >
+                                        <svg
+                                            class="w-6 h-6"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            ></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="space-y-4">
+                                    <div
+                                        v-for="structure in structures"
+                                        :key="structure._id"
+                                        class="p-1 "
+                                    >
+                                        <div
+                                            class="bg-gray-100 rounded-xl p-1 shadow-md space-y-2 py-4 lg:px-3 px-1"
+                                        >
+                                            <div>
+                                                <label
+                                                    >Constructure Name
+                                                </label>
+                                                <select
+                                                    class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                                    v-model="structure.occPro"
+                                                >
+                                                    <option value=""
+                                                        >Select one</option
+                                                    >
+                                                    <option value="godown"
+                                                        >Godown</option
+                                                    >
+                                                    <option value="showroom"
+                                                        >Showroom</option
+                                                    >
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    >Constructure Type:
+                                                </label>
+                                                <select
+                                                    class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                                    v-model="structure.conType"
+                                                >
+                                                    <option value=""
+                                                        >Select one</option
+                                                    >
+                                                    <option value="class1"
+                                                        >Class I</option
+                                                    >
+                                                    <option value="class2"
+                                                        >Class II</option
+                                                    >
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label for="itemAmount"
+                                                    >Item percentage in
+                                                    {{
+                                                        structure.occPro
+                                                    }}</label
+                                                >
+                                                <div class="flex items-center">
+                                                    <input
+                                                        class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100 w-full"
+                                                        type="number"
+                                                        v-model="
+                                                            structure.itemPercentage
+                                                        "
+                                                    />
+                                                    <span>%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-3">
+                                <label>Item Type: </label>
+                                <select
+                                    class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                    v-model="itemType"
+                                >
+                                    <option value="">Select one</option>
+                                    <option value="non">Non-Hazerd</option>
+                                </select>
+                            </div>
+                            <div class="pb-3">
+                                <label for="rsd">RSD :</label>
+                                <input
+                                    class="text-red-500"
+                                    type="checkbox"
+                                    v-model="rsd"
+                                />
+                            </div>
+                            <button
+                                class="bg-blue-500 px-3 py-2 rounded-lg"
+                                type="submit"
+                            >
+                                Calculate
+                            </button>
+                        </form>
+                    </div>
+                    <div class="py-3 bg-gray-100 mt-5 rounded-lg px-2">
+                        <p>Premium detail:</p>
+                        <p>
+                            Net premium:
+                            <span class="text-red-500">{{ netPremium }}</span>
+                        </p>
+                        <p>
+                            Vat: <span class="text-red-500">{{ vat }}</span>
+                        </p>
+                        <p>
+                            Total: <span class="text-red-500">{{ total }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from "uuid";
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+    name: "HelloWorld",
+    data() {
+        return {
+            limit: null,
+            tenpercent: true,
+            netPremium: 0,
+            vat: null,
+            total: null,
+            rsd: false,
+            structures: [
+                {
+                    _id: uuidv4(),
+                    occPro: "godown",
+                    conType: "class1",
+                    itemPercentage: 100,
+                },
+            ],
+            itemType: "non",
+        };
+    },
+    methods: {
+        addPremises() {
+            this.structures.push({
+                _id: uuidv4(),
+                occPro: "godown",
+                conType: "class1",
+                itemPercentage: null,
+            });
+        },
+        calculate() {
+            this.netPremium = 0;
+            this.vat = 0;
+            this.total = 0;
+            let amount;
+            this.limit = parseInt(this.limit);
+            this.netPremium = parseInt(this.netPremium);
+            this.vat = parseInt(this.vat);
+            this.total = parseInt(this.total);
+            if (this.tenpercent) {
+                amount = this.limit * (10 / 100);
+                amount = parseInt(amount) + this.limit;
+            } else {
+                amount = this.limit;
+            }
+            // Structure
+            this.structures.forEach((structure) => {
+                let structurePrice = amount * (structure.itemPercentage / 100);
+                parseInt(structurePrice);
+                console.log(structurePrice);
+
+                if (structure.occPro == "godown") {
+                    if (structure.conType == "class1") {
+                        this.netPremium =
+                            this.netPremium + structurePrice * (0.11 / 100);
+                    }
+                    if (structure.conType == "class2") {
+                        this.netPremium =
+                            this.netPremium + structurePrice * (0.13 / 100);
+                    }
+                }
+                if (structure.occPro == "showroom") {
+                    if (structure.conType == "class1") {
+                        this.netPremium =
+                            this.netPremium + structurePrice * (0.15 / 100);
+                    }
+                    if (structure.conType == "class2") {
+                        this.netPremium =
+                            this.netPremium + structurePrice * (0.17 / 100);
+                    }
+                }
+            });
+            // RSD
+            if (this.rsd) {
+                this.netPremium = this.netPremium + amount * (0.13 / 100);
+            }
+            // VAT
+            this.vat = this.netPremium * (15 / 100);
+            // Total
+            this.total = this.netPremium + this.vat;
+        },
+    },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+<style></style>
