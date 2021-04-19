@@ -7,7 +7,7 @@
             <div class="bg-gray-100 rounded-b-md py-3">
                 <h1 class=" text-center font-bold text-3xl text-gray-800">
                     Insurence <span class="text-red-500">Rate</span>
-                    <p class="text-center text-xs">(Beta Version)</p>
+                    <p class="text-center text-xs">(Version: 0.4 beta)</p>
                 </h1>
                 <div class=" text-center">
                     <router-link
@@ -20,7 +20,7 @@
                     <router-link
                         exact-active-class="text-red-500 font-bold"
                         class=" hover:text-red-700 hover:underline"
-                        to="/about"
+                        to="/marin"
                         >Marin</router-link
                     >
                 </div>

@@ -74,7 +74,19 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="py-3">
+                    <input
+                        class="text-red-500 rounded cursor-pointer"
+                        type="checkbox"
+                        v-model="hasStamp"
+                    />
+                    <label for="hasStamp">
+                        Include Stamp Duty
+                        <span class="font-bold font-bangla text-gray-500"
+                            >(১২০০ দিয়ে ভাগ)</span
+                        ></label
+                    >
+                </div>
                 <button
                     class="bg-green-400 px-3 py-2 rounded-lg hover:bg-red-400 transition-colors duration-300 ring-4 ring-green-200"
                     type="submit"
@@ -99,9 +111,12 @@
             </p>
             <p>
                 Stamp duty:
-                <span class="text-red-500">{{
-                    stamp | roundFig | numberWithCommas
-                }}</span>
+                <span class="text-red-500"
+                    >{{ stamp | roundFig | numberWithCommas }}
+                    <span class="text-sm " v-if="!hasStamp"
+                        >Stamp Duty not included</span
+                    ></span
+                >
             </p>
             <p>
                 Total:
@@ -122,6 +137,7 @@ export default {
         via: "ship",
         conditionCover: "iccc",
         war: true,
+        hasStamp: false,
         netPremium: 0,
         vat: 0,
         stamp: 0,
@@ -170,7 +186,9 @@ export default {
                 }
             }
             // STAMP
-            this.stamp = amount / 1500;
+            if (this.hasStamp) {
+                this.stamp = amount / 1500;
+            }
             // VAT
             this.vat = this.netPremium * (15 / 100);
             // TOTAL
@@ -179,3 +197,10 @@ export default {
     },
 };
 </script>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Da+2&display=swap");
+.font-bangla {
+    font-family: "Baloo Da 2", cursive;
+}
+</style>

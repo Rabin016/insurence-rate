@@ -61,7 +61,6 @@
                                             class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
                                             v-model="structure.occPro"
                                         >
-                                            <option value="">Select one</option>
                                             <option value="godown"
                                                 >Godown</option
                                             >
@@ -76,7 +75,6 @@
                                             class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
                                             v-model="structure.conType"
                                         >
-                                            <option value="">Select one</option>
                                             <option value="class1"
                                                 >Class I</option
                                             >
@@ -111,7 +109,6 @@
                             class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
                             v-model="itemType"
                         >
-                            <option value="">Select one</option>
                             <option value="non">Non-Hazerd</option>
                         </select>
                     </div>
