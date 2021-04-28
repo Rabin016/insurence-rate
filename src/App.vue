@@ -7,7 +7,7 @@
             <div class="bg-gray-100 rounded-b-md py-3">
                 <h1 class=" text-center font-bold text-3xl text-gray-800">
                     Insurence <span class="text-red-500">Rate</span>
-                    <p class="text-center text-xs">(Version: 0.4 beta)</p>
+                    <p class="text-center text-xs">(Version: 0.7 beta)</p>
                 </h1>
                 <div class=" text-center">
                     <router-link

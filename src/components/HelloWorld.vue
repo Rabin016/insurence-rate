@@ -60,6 +60,7 @@
                                         <select
                                             class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
                                             v-model="structure.occPro"
+                                            @change="defaultRate(structure._id)"
                                         >
                                             <option value="godown"
                                                 >Godown</option
@@ -71,22 +72,40 @@
                                     </div>
                                     <div>
                                         <label>Constructure Type: </label>
-                                        <select
-                                            class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
-                                            v-model="structure.conType"
-                                        >
-                                            <option value="class1"
-                                                >Class I</option
+                                        <div class="flex">
+                                            <select
+                                                class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                                v-model="structure.conType"
+                                                @change="
+                                                    defaultRate(structure._id)
+                                                "
                                             >
-                                            <option value="class2"
-                                                >Class II</option
-                                            >
-                                        </select>
+                                                <option value="class1"
+                                                    >Class I</option
+                                                >
+                                                <option value="class2"
+                                                    >Class II</option
+                                                >
+                                                <option value="class3"
+                                                    >Class III</option
+                                                >
+                                            </select>
+                                            <input
+                                                step="any"
+                                                type="number"
+                                                v-model="structure.rate"
+                                                class="border border-transparent ml-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                            />
+                                            <span class="m-1">%</span>
+                                        </div>
                                     </div>
                                     <div>
                                         <label for="itemAmount"
                                             >Item percentage in
-                                            {{ structure.occPro }}</label
+                                            <span
+                                                class="text-red-500 capitalize"
+                                                >{{ structure.occPro }}</span
+                                            ></label
                                         >
                                         <div class="flex items-center">
                                             <input
@@ -171,6 +190,7 @@ export default {
                     _id: uuidv4(),
                     occPro: "godown",
                     conType: "class1",
+                    rate: 0.11,
                     itemPercentage: 100,
                 },
             ],
@@ -187,12 +207,32 @@ export default {
         },
     },
     methods: {
+        defaultRate(id) {
+            this.structures.forEach((structure) => {
+                if (id === structure._id) {
+                    if (structure.occPro == "showroom") {
+                        if (structure.conType == "class1") {
+                            structure.rate = 0.15;
+                        } else if (structure.conType == "class2") {
+                            structure.rate = 0.17;
+                        }
+                    } else if (structure.occPro == "godown") {
+                        if (structure.conType == "class1") {
+                            structure.rate = 0.11;
+                        } else if (structure.conType == "class2") {
+                            structure.rate = 0.13;
+                        }
+                    }
+                }
+            });
+        },
         addPremises() {
             this.structures.push({
                 _id: uuidv4(),
                 occPro: "godown",
                 conType: "class1",
                 itemPercentage: null,
+                rate: 0.11,
             });
         },
         calculate() {
@@ -214,28 +254,8 @@ export default {
             this.structures.forEach((structure) => {
                 let structurePrice = amount * (structure.itemPercentage / 100);
                 parseInt(structurePrice);
-                console.log(structurePrice);
-
-                if (structure.occPro == "godown") {
-                    if (structure.conType == "class1") {
-                        this.netPremium =
-                            this.netPremium + structurePrice * (0.11 / 100);
-                    }
-                    if (structure.conType == "class2") {
-                        this.netPremium =
-                            this.netPremium + structurePrice * (0.13 / 100);
-                    }
-                }
-                if (structure.occPro == "showroom") {
-                    if (structure.conType == "class1") {
-                        this.netPremium =
-                            this.netPremium + structurePrice * (0.15 / 100);
-                    }
-                    if (structure.conType == "class2") {
-                        this.netPremium =
-                            this.netPremium + structurePrice * (0.17 / 100);
-                    }
-                }
+                this.netPremium =
+                    this.netPremium + structurePrice * (structure.rate / 100);
             });
             // RSD
             if (this.rsd) {
