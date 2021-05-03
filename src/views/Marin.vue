@@ -83,7 +83,7 @@
                     <label for="hasStamp">
                         Include Stamp Duty
                         <span class="font-bold font-bangla text-gray-500"
-                            >(১২০০ দিয়ে ভাগ)</span
+                            >(১৫০০ দিয়ে ভাগ)</span
                         ></label
                     >
                 </div>
