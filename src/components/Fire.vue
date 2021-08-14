@@ -14,12 +14,13 @@
                     </div>
 
                     <div class="py-3">
+                        <label for="rate">Bank Percentage: </label>
                         <input
-                            class="text-red-500 rounded cursor-pointer"
-                            type="checkbox"
-                            v-model="tenpercent"
+                            type="number"
+                            required
+                            v-model.number="bankPercentage"
+                            class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100 w-full"
                         />
-                        <label for="tenPercent"> Add +10%</label>
                     </div>
                     <div class="border-2 rounded-lg px-1 py-3">
                         <div class="flex align-middle items-center py-2">
@@ -176,11 +177,11 @@
 <script>
 import { v4 as uuidv4 } from "uuid";
 export default {
-    name: "HelloWorld",
+    name: "Fire",
     data() {
         return {
             limit: null,
-            tenpercent: true,
+            bankPercentage: 10,
             netPremium: 0,
             vat: null,
             total: null,
@@ -244,8 +245,8 @@ export default {
             this.netPremium = parseInt(this.netPremium);
             this.vat = parseInt(this.vat);
             this.total = parseInt(this.total);
-            if (this.tenpercent) {
-                amount = this.limit * (10 / 100);
+            if (this.bankPercentage) {
+                amount = this.limit * (this.bankPercentage / 100);
                 amount = parseInt(amount) + this.limit;
             } else {
                 amount = this.limit;

@@ -23,12 +23,13 @@
                 </div>
 
                 <div class="py-3">
+                    <label for="rate">Bank Percentage: </label>
                     <input
-                        class="text-red-500 rounded cursor-pointer"
-                        type="checkbox"
-                        v-model="tenpercent"
+                        type="number"
+                        required
+                        v-model.number="bankPercentage"
+                        class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100 w-full"
                     />
-                    <label for="tenPercent"> Add +10%</label>
                 </div>
                 <div class="border-2 rounded-lg px-1 py-3 mb-3">
                     <div class="flex justify-around">
@@ -44,13 +45,23 @@
                     <div v-if="via == 'ship'">
                         <div class="flex flex-col py-2">
                             <label>Condition of Cover: </label>
-                            <select
-                                class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
-                                v-model="conditionCover"
-                            >
-                                <option value="iccb">ICC "B"</option>
-                                <option value="iccc">ICC "C"</option>
-                            </select>
+                            <div class="flex">
+                                <select
+                                    class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                    v-model="conditionCover"
+                                    @change="shipConditionCoverChange"
+                                >
+                                    <option value="iccb">ICC "B"</option>
+                                    <option value="iccc">ICC "C"</option>
+                                </select>
+                                <input
+                                    step="any"
+                                    type="number"
+                                    v-model.number="shipMarinRate"
+                                    class="border border-transparent ml-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                />
+                                <span class="m-1">%</span>
+                            </div>
                         </div>
                         <div class="py-3">
                             <input
@@ -64,13 +75,21 @@
                     <div v-if="via == 'truck'">
                         <div class="flex flex-col py-2">
                             <label>Condition of Cover: </label>
-                            <select
-                                class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
-                                v-model="conditionCover"
-                            >
-                                <option value="risk">Risk only</option>
-                                <option value="allRisk">All Risk</option>
-                            </select>
+                            <div class="flex">
+                                <select
+                                    class="border border-transparent focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                    v-model="conditionCover"
+                                >
+                                    <option value="risk">Risk only</option>
+                                </select>
+                                <input
+                                    step="any"
+                                    type="number"
+                                    v-model.number="truckMarinRate"
+                                    class="border border-transparent ml-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent rounded-lg bg-gray-300 focus:bg-gray-100"
+                                />
+                                <span class="m-1">%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,10 +101,7 @@
                     />
                     <label for="hasStamp">
                         Include Stamp Duty
-                        <span class="font-bold font-bangla text-gray-500"
-                            >(১৫০০ দিয়ে ভাগ)</span
-                        ></label
-                    >
+                    </label>
                 </div>
                 <button
                     class="bg-green-400 px-3 py-2 rounded-lg hover:bg-red-400 transition-colors duration-300 ring-4 ring-green-200"
@@ -133,11 +149,13 @@ export default {
     data: () => ({
         rate: 85,
         limit: null,
-        tenpercent: true,
+        shipMarinRate: 0.3,
+        truckMarinRate: 0.43,
+        bankPercentage: 10,
         via: "ship",
         conditionCover: "iccc",
         war: true,
-        hasStamp: false,
+        hasStamp: true,
         netPremium: 0,
         vat: 0,
         stamp: 0,
@@ -153,6 +171,14 @@ export default {
         },
     },
     methods: {
+        // Condition cover change for #Ship
+        shipConditionCoverChange() {
+            if (this.conditionCover == "iccc") {
+                this.shipMarinRate = 0.3;
+            } else if (this.conditionCover == "iccb") {
+                this.shipMarinRate = 0.45;
+            }
+        },
         calculate() {
             this.netPremium = 0;
             this.vat = 0;
@@ -161,16 +187,13 @@ export default {
             let amount;
             parseInt(amount);
             amount = parseInt(this.rate) * parseInt(this.limit);
-            if (this.tenpercent) {
-                amount = amount + (amount * 10) / 100;
+            if (this.bankPercentage) {
+                amount = amount + (amount * this.bankPercentage) / 100;
             }
             // For ship
             if (this.via == "ship") {
-                if (this.conditionCover == "iccc") {
-                    this.netPremium = amount * (0.3 / 100);
-                }
-                if (this.conditionCover == "iccb") {
-                    this.netPremium = amount * (0.45 / 100);
+                if (this.shipMarinRate && this.limit) {
+                    this.netPremium = amount * (this.shipMarinRate / 100);
                 }
                 if (this.war) {
                     this.netPremium = this.netPremium + amount * (0.05 / 100);
@@ -179,15 +202,21 @@ export default {
             // For Truck
             if (this.via == "truck") {
                 if (this.conditionCover == "risk") {
-                    this.netPremium = amount * (0.29 / 100);
+                    this.netPremium = amount * (this.truckMarinRate / 100);
                 }
-                if (this.conditionCover == "allRisk") {
-                    this.netPremium = amount * (0.43 / 100);
-                }
+            }
+            // Minimum Net Premium
+            if (this.netPremium < 500) {
+                this.netPremium = 500;
             }
             // STAMP
             if (this.hasStamp) {
-                this.stamp = amount / 1500;
+                if (this.via == "ship") {
+                    this.stamp = amount / 1500;
+                }
+                if (this.via == "truck") {
+                    this.stamp = 50;
+                }
             }
             // VAT
             this.vat = this.netPremium * (15 / 100);
